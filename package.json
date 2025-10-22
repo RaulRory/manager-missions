@@ -1,13 +1,14 @@
 {
   "name": "manager-missions",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:dev": "node --watch ./src/server.js",
+    "test": "node --test ./tests"
   },
   "keywords": [],
-  "author": "",
+  "author": "Raul Rory <raulrory@gmail.com>",
   "license": "ISC",
   "description": "",
   "dependencies": {
