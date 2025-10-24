@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "start:dev": "node --watch ./src/server.js",
-    "test": "node --test ./tests"
+    "test": "node --test ./tests",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
   },
   "keywords": [],
   "author": "Raul Rory <raulrory@gmail.com>",
@@ -13,5 +15,10 @@
   "description": "",
   "dependencies": {
     "fastify": "^5.6.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.38.0",
+    "@faker-js/faker": "^9.9.0",
+    "eslint": "^9.38.0"
   }
 }
