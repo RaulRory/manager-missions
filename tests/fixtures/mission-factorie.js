@@ -12,7 +12,7 @@ export class MissionFactorie {
       spacecraft: faker.color.human(),
       destination: faker.location.city(),
       status: faker.helpers.arrayElement(["active", "completed", "failed"]),
-      duration: faker.number.int(),
+      duration: faker.number.int({ min: 1, max: 100 }),
       ...params
     });
 
