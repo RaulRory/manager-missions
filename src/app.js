@@ -1,4 +1,5 @@
 import fastify from "fastify";
+import { missionRoutes } from "./routes/mission.js";
 
 const logConfig = {
   development: {
@@ -18,6 +19,8 @@ export function createInstanceApp() {
   const app = fastify({
     logger: logConfig[process.env.ENVIRONMENT || "development"]
   });
+
+  app.register(missionRoutes, { prefix: "/api" });
 
   return app;
 }
