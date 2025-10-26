@@ -1,9 +1,9 @@
 import { DatabaseSync } from "node:sqlite";
 
-export const database = new DatabaseSync(":memory");
+export const database = new DatabaseSync(":memory:");
 
 const queryMission = `
-CREATE TABLE mission(
+CREATE TABLE missions (
     id text PRIMARY KEY NOT NULL,
     name text NOT NULL,
     crew text NOT NULL,
@@ -15,6 +15,10 @@ CREATE TABLE mission(
 
 function createTableMission() {
   return database.exec(queryMission);
+}
+
+export function dropTableMission() {
+  return database.exec("DROP TABLE IF EXISTS missions");
 }
 
 export function dbInitialization() {

@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+
 export class Mission {
   id;
   name;
@@ -18,7 +20,7 @@ export class Mission {
     status,
     duration
   }) {
-    this.id = id;
+    this.id = id || randomUUID();
     this.name = name;
     this.crew = crew;
     this.spacecraft = spacecraft;
