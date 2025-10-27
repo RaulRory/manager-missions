@@ -34,4 +34,23 @@ export class MissionsControler {
       });
     }
   }
+
+  static async listAllMissions(request, reply) {
+    try {
+      const database = new MissionsDatabase();
+      // await database.select();
+
+
+      return reply.code(200).send({
+        data: []
+      });
+
+    } catch (error) {
+      request.log.error(error);
+      
+      return reply.code(500).send({
+        error: "An unexpected error occurred while list the missions"
+      });
+    }
+  }
 };

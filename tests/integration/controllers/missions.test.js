@@ -75,4 +75,16 @@ describe("Controllers Missions", () => {
     deepStrictEqual(response.statusCode, 500);
     deepStrictEqual(responseBody.error, "An unexpected error occurred while creating the mission");
   });
+
+  test("Should list all the missions presents in database when was empty", async () => {
+    const response = await app.inject({
+      method: "GET",
+      url: "/missions"
+    });
+
+    const responseBody = JSON.parse(response.body);
+
+    deepStrictEqual(response.statusCode, 200);
+    deepStrictEqual(responseBody, { data: [] });
+  });
 });
