@@ -19,7 +19,7 @@ export class MissionsControler {
 
       const mission = new Mission(validation.data);
       const database = new MissionsDatabase();
-      await database.insert(mission);
+      database.insert(mission);
 
 
       return reply.code(201).send({
@@ -38,11 +38,11 @@ export class MissionsControler {
   static async listAllMissions(request, reply) {
     try {
       const database = new MissionsDatabase();
-      // await database.select();
+      const listtheMission = await database.select();
 
 
       return reply.code(200).send({
-        data: []
+        data: listtheMission
       });
 
     } catch (error) {

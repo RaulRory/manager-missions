@@ -1,7 +1,7 @@
 import { database } from "./config.js";
 
 export class MissionsDatabase {
-  async insert(mission) {
+  insert(mission) {
     const { id, name, crew, spacecraft, destination, status, duration } = mission;
 
     const query = database.prepare(`
