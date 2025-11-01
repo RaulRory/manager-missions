@@ -165,6 +165,27 @@ describe("Controllers Missions", () => {
     deepStrictEqual(responseBody, { data: expectedMissions });
   });
 
+  test("Should return 500 server error when database fails on GET", async () => {
+    const originalSelect = MissionsDatabase.prototype.selectById;
+    const ID = randomUUID();
+
+    MissionsDatabase.prototype.selectById = () => {
+      throw new Error("Database connection failed");
+    };
+
+    const response = await app.inject({
+      method: "GET",
+      url: `/missions/${ID}`
+    });
+
+    const responseBody = JSON.parse(response.body);
+
+    deepStrictEqual(response.statusCode, 500);
+    deepStrictEqual(responseBody.error, "An unexpected error occurred when find the missions");
+
+    MissionsDatabase.prototype.selectById = originalSelect;
+  });
+
   test("Should list a mission scpecific when id not exists", async () => {
     const ID = randomUUID();
 
@@ -274,5 +295,36 @@ describe("Controllers Missions", () => {
     deepStrictEqual(getResponse.statusCode, 200);
     deepStrictEqual(responseBody.data, expected);
   });
-});
 
+  test("Should return 500 server error when database fails on PUT", async () => {
+    const missionData = factorie.createMission();
+
+    await app.inject({
+      method: "POST",
+      url: "/missions",
+      payload: {
+        ...missionData
+      }
+    });
+
+    const originalUpdate = MissionsDatabase.prototype.update;
+    const fieldsToUpdate = { name: "Mission updated", status: "completed" };
+
+    MissionsDatabase.prototype.update = () => {
+      throw new Error("Database connection failed");
+    };
+
+    const response = await app.inject({
+      method: "PUT",
+      url: `/missions/${missionData.id}`,
+      payload: fieldsToUpdate
+    });
+
+    const responseBody = JSON.parse(response.body);
+
+    deepStrictEqual(response.statusCode, 500);
+    deepStrictEqual(responseBody.error, "An unexpected error occurred when updating the mission");
+
+    MissionsDatabase.prototype.update = originalUpdate;
+  });
+});
