@@ -1,5 +1,6 @@
 import { after, before, beforeEach, describe, test }  from "node:test";
 import { deepStrictEqual } from "node:assert";
+import { randomUUID } from "node:crypto";
 import { createInstanceApp } from "../../../src/app.js";
 import { missionRoutes } from "../../../src/routes/mission.js";
 import { clearMissions, dbInitialization, dropTableMission } from "../../../src/database/config.js";
@@ -149,5 +150,39 @@ describe("Controllers Missions", () => {
 
     deepStrictEqual(response.statusCode, 200);
     deepStrictEqual(responseBody, { data: expectedMissions });
+  });
+
+  test("Should list a mission scpecific according with id", async () => {
+    const mission = factorie.createMission();
+
+    app.inject({
+      method: "POST",
+      url: "/missions",
+      payload: { ...mission  }
+    });
+
+    const response = await app.inject({
+      method: "GET",
+      url: `/missions/${mission.id}`
+    });
+
+    const responseBody = JSON.parse(response.body);
+
+    deepStrictEqual(response.statusCode, 200);
+    deepStrictEqual(responseBody, { data: [mission] });
+  });
+
+  test("Should list a mission scpecific when id not exists", async () => {
+    const ID = randomUUID();
+
+    const response = await app.inject({
+      method: "GET",
+      url: `/missions/${ID}`
+    });
+
+    const responseBody = JSON.parse(response.body);
+
+    deepStrictEqual(response.statusCode, 200);
+    deepStrictEqual(responseBody, { data: [] });
   });
 });
