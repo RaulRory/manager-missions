@@ -21,6 +21,10 @@ export function dropTableMission() {
   return database.exec("DROP TABLE IF EXISTS missions");
 }
 
+export function clearMissions() {
+  return database.exec("DELETE FROM missions");
+}
+
 export function dbInitialization() {
   console.info("Table Mission is send to create");
   createTableMission();

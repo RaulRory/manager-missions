@@ -13,4 +13,12 @@ export class MissionsDatabase {
 
     return;
   }
+
+  select() {
+    const query = database.prepare("SELECT * FROM missions");
+
+    const result = query.all();
+
+    return result;
+  }
 }
