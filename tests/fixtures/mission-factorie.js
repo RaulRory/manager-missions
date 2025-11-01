@@ -20,4 +20,17 @@ export class MissionFactorie {
 
     return mission;
   }
+
+
+  mapMissionToJson(missions) {
+    return missions.map(mission => ({
+      id: mission.id,
+      name: mission.name,
+      crew: mission.crew,
+      spacecraft: mission.spacecraft,
+      destination: mission.destination,
+      status: mission.status,
+      duration: mission.duration
+    }));
+  }
 }

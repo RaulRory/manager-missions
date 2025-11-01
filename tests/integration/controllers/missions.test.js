@@ -138,15 +138,7 @@ describe("Controllers Missions", () => {
     });
 
     const responseBody = JSON.parse(response.body);
-    const expectedMissions = factorie.missions.map(mission => ({
-      id: mission.id,
-      name: mission.name,
-      crew: mission.crew,
-      spacecraft: mission.spacecraft,
-      destination: mission.destination,
-      status: mission.status,
-      duration: mission.duration
-    }));
+    const expectedMissions = factorie.mapMissionToJson(factorie.missions);
 
     deepStrictEqual(response.statusCode, 200);
     deepStrictEqual(responseBody, { data: expectedMissions });
@@ -155,7 +147,7 @@ describe("Controllers Missions", () => {
   test("Should list a mission scpecific according with id", async () => {
     const mission = factorie.createMission();
 
-    app.inject({
+    await app.inject({
       method: "POST",
       url: "/missions",
       payload: { ...mission  }
@@ -167,9 +159,10 @@ describe("Controllers Missions", () => {
     });
 
     const responseBody = JSON.parse(response.body);
+    const [expectedMissions] = factorie.mapMissionToJson(factorie.missions);
 
     deepStrictEqual(response.statusCode, 200);
-    deepStrictEqual(responseBody, { data: [mission] });
+    deepStrictEqual(responseBody, { data: expectedMissions });
   });
 
   test("Should list a mission scpecific when id not exists", async () => {
