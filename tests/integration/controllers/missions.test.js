@@ -327,4 +327,93 @@ describe("Controllers Missions", () => {
 
     MissionsDatabase.prototype.update = originalUpdate;
   });
+
+  test("Should return 500 server error when database fails on DELETE", async () => {
+    const missionData = factorie.createMission();
+
+    await app.inject({
+      method: "POST",
+      url: "/missions",
+      payload: {
+        ...missionData
+      }
+    });
+
+    const originalDelete = MissionsDatabase.prototype.delete;
+    MissionsDatabase.prototype.delete = () => {
+      throw new Error("Database connection failed");
+    };
+
+    const response = await app.inject({
+      method: "DELETE",
+      url: `/missions/${missionData.id}`
+    });
+
+    const responseBody = JSON.parse(response.body);
+
+    deepStrictEqual(response.statusCode, 500);
+    deepStrictEqual(responseBody.error, "An unexpected error occurred when deleting the mission");
+
+    MissionsDatabase.prototype.delete = originalDelete;
+  });
+
+  test("Should delete a mission the database", async () => {
+    const missionData = factorie.createMission();
+
+    await app.inject({
+      method: "POST",
+      url: "/missions",
+      payload: {
+        ...missionData
+      }
+    });
+
+    const response = await app.inject({
+      method: "DELETE",
+      url: `/missions/${missionData.id}`
+    });
+
+    deepStrictEqual(response.statusCode, 204);
+
+    const getResponse = await app.inject({
+      method: "GET",
+      url: `/missions/${missionData.id}`
+    });
+
+    const responseBody = JSON.parse(getResponse.body);
+    const expected = { data: [] };
+
+    deepStrictEqual(getResponse.statusCode, 200);
+    deepStrictEqual(responseBody, expected);
+  });
+
+  test("Should not delete a mission scpecific when id not exists", async () => {
+    const ID = randomUUID();
+
+    const response = await app.inject({
+      method: "DELETE",
+      url: `/missions/${ID}`
+    });
+
+    const responseBody = JSON.parse(response.body);
+    const expected = { message: "Something is wrong mission not exists!" };
+
+    deepStrictEqual(response.statusCode, 400);
+    deepStrictEqual(responseBody, expected);
+  });
+
+  test("Should delete a mission scpecific when id is valid", async () => {
+    const ID = null;
+
+    const response = await app.inject({
+      method: "DELETE",
+      url: `/missions/${ID}`
+    });
+
+    const responseBody = JSON.parse(response.body);
+    const expected = { error: "Something it's wrongs while delete the mission" };
+
+    deepStrictEqual(response.statusCode, 400);
+    deepStrictEqual(responseBody, expected);
+  });
 });

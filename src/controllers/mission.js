@@ -117,4 +117,35 @@ export class MissionsControler {
       });
     }
   }
+
+  static async deleteMission(request, reply) {
+    try {
+      const params = validateMissionId(request.params.id);
+
+      if(!params.isValid) {
+        return reply.code(400).send({
+          error: "Something it's wrongs while delete the mission"
+        });
+      };
+
+      const database = new MissionsDatabase();
+      const missionExists = database.selectById(params.data);
+
+      if(!missionExists) {
+        return reply.code(400).send({
+          message: "Something is wrong mission not exists!"
+        });
+      };
+
+      database.delete(params.data);
+
+      return reply.code(204).send();
+    } catch (error) {
+      request.log.error(error);
+
+      return reply.code(500).send({
+        error: "An unexpected error occurred when deleting the mission"
+      });
+    }
+  }
 };

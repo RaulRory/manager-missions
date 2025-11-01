@@ -43,4 +43,12 @@ export class MissionsDatabase {
 
     return result;
   }
+
+  delete(id) {
+    const query = database.prepare("DELETE FROM missions WHERE id = ?");
+
+    query.run(id);
+
+    return;
+  }
 }
