@@ -1,6 +1,6 @@
 import { beforeEach, describe, test } from "node:test";
 import { strictEqual, deepStrictEqual } from "node:assert";
-import { validateMission } from "../../../src/validators/mission.js";
+import { validateMission, validateMissionId } from "../../../src/validators/mission.js";
 import { MissionFactorie } from "../../fixtures/mission-factorie.js";
 
 describe("Validation Mission", () => {
@@ -90,5 +90,13 @@ describe("Validation Mission", () => {
     strictEqual(result.isValid, false);
     strictEqual(result.errors[0].field, "name");
     strictEqual(result.errors[0].message, "Mission name must be at least 3 characters long");
+  });
+
+  test("Should validate type ID mission", () => {
+    const missionIdInvalid = null;
+
+    const result = validateMissionId(missionIdInvalid);
+
+    strictEqual(result.isValid, false);
   });
 });

@@ -89,3 +89,15 @@ export const validateMission = (data) => {
 
   return { isValid: true, data: value };
 };
+
+export const validateMissionId = (id) => {
+  const idSchema = Joi.string().uuid();
+
+  const { error, value } =  idSchema.validate(id);
+
+  if(error) {
+    return { isValid: false, error };
+  }
+
+  return { isValid: true, data: value };
+};
