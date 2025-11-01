@@ -193,4 +193,86 @@ describe("Controllers Missions", () => {
     deepStrictEqual(response.statusCode, 400);
     deepStrictEqual(responseBody, { error: "Something it's wrongs while find the mission" });
   });
+
+  test("Should not update a mission scpecific when id not exists", async () => {
+    const ID = randomUUID();
+    const fieldsToUpdate = { name: "Mission updated", status: "completed" };
+
+    const response = await app.inject({
+      method: "PUT",
+      url: `/missions/${ID}`,
+      payload: fieldsToUpdate
+    });
+
+    const responseBody = JSON.parse(response.body);
+    const expected = { message: "Something is wrong mission not exists!" };
+
+    deepStrictEqual(response.statusCode, 400);
+    deepStrictEqual(responseBody, expected);
+  });
+
+  test("Should not update a mission scpecific when id not valid", async () => {
+    const ID = null;
+    const fieldsToUpdate = { name: "Mission updated", status: "completed" };
+
+    const response = await app.inject({
+      method: "PUT",
+      url: `/missions/${ID}`,
+      payload: fieldsToUpdate
+    });
+
+    const responseBody = JSON.parse(response.body);
+    const expected = { error: "Something it's wrongs while update the mission" };
+
+    deepStrictEqual(response.statusCode, 400);
+    deepStrictEqual(responseBody, expected);
+  });
+
+  test("Should not update a mission scpecific when id is valid but fields not valid", async () => {
+    const ID = randomUUID();
+    const fieldsToUpdate = { name: 10101, status: "MOCK-ERROR" };
+
+    const response = await app.inject({
+      method: "PUT",
+      url: `/missions/${ID}`,
+      payload: fieldsToUpdate
+    });
+
+    const responseBody = JSON.parse(response.body);
+    const expected = "Validation failed";
+
+    deepStrictEqual(response.statusCode, 400);
+    deepStrictEqual(responseBody.error, expected);
+  });
+
+  test("Should update a mission scpecific when id is valid", async () => {
+    const mission = factorie.createMission();
+    const fieldsToUpdate = { name: "Mission updated", status: "completed" };
+
+    await app.inject({
+      method: "POST",
+      url: "/missions",
+      payload: { ...mission }
+    });
+
+    const response = await app.inject({
+      method: "PUT",
+      url: `/missions/${mission.id}`,
+      payload: fieldsToUpdate
+    });
+
+    deepStrictEqual(response.statusCode, 204);
+
+    const getResponse = await app.inject({
+      method: "GET",
+      url: `/missions/${mission.id}`
+    });
+
+    const responseBody = JSON.parse(getResponse.body);
+    const expected = { ...mission, ...fieldsToUpdate };
+
+    deepStrictEqual(getResponse.statusCode, 200);
+    deepStrictEqual(responseBody.data, expected);
+  });
 });
+

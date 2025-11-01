@@ -29,4 +29,18 @@ export class MissionsDatabase {
 
     return result;
   }
+
+  update(id, fields) {
+    const allowedFields = ["name", "crew", "spacecraft", "destination", "status", "duration"];
+    const validFields = Object.keys(fields).filter(key => allowedFields.includes(key));
+
+    const setClause = validFields.map(field => `${field} = ?`).join(", ");
+    const values = validFields.map(field => fields[field]);
+
+    const query = database.prepare(`UPDATE missions SET ${setClause} WHERE id = ?`);
+
+    const result = query.run(...values, id);
+
+    return result;
+  }
 }
