@@ -174,9 +174,10 @@ describe("Controllers Missions", () => {
     });
 
     const responseBody = JSON.parse(response.body);
+    const expected = { data: [] };
 
     deepStrictEqual(response.statusCode, 200);
-    deepStrictEqual(responseBody, { data: [] });
+    deepStrictEqual(responseBody, expected);
   });
 
   test("Should list a mission scpecific when id not is valid", async () => {
