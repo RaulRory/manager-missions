@@ -38,16 +38,14 @@ export class MissionsControler {
   static async listAllMissions(request, reply) {
     try {
       const database = new MissionsDatabase();
-      const listtheMission = await database.select();
-
+      const listtheMission = database.select();
 
       return reply.code(200).send({
         data: listtheMission
       });
-
     } catch (error) {
       request.log.error(error);
-      
+
       return reply.code(500).send({
         error: "An unexpected error occurred while list the missions"
       });
