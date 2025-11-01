@@ -178,4 +178,18 @@ describe("Controllers Missions", () => {
     deepStrictEqual(response.statusCode, 200);
     deepStrictEqual(responseBody, { data: [] });
   });
+
+  test("Should list a mission scpecific when id not is valid", async () => {
+    const ID = null;
+
+    const response = await app.inject({
+      method: "GET",
+      url: `/missions/${ID}`
+    });
+
+    const responseBody = JSON.parse(response.body);
+
+    deepStrictEqual(response.statusCode, 400);
+    deepStrictEqual(responseBody, { error: "Something it's wrongs while find the mission" });
+  });
 });

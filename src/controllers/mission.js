@@ -1,4 +1,4 @@
-import { validateMission } from "../validators/mission.js";
+import { validateMission, validateMissionId } from "../validators/mission.js";
 import { Mission } from "../models/mission.js";
 import { MissionsDatabase } from "../database/mission.js";
 
@@ -48,6 +48,31 @@ export class MissionsControler {
 
       return reply.code(500).send({
         error: "An unexpected error occurred while list the missions"
+      });
+    }
+  }
+
+  static async findMissionById(request, reply) {
+    try {
+      const params = validateMissionId(request.params.id);
+
+      if(!params.isValid) {
+        return reply.code(400).send({
+          error: "Something it's wrongs while find the mission"
+        });
+      };
+
+      const database = new MissionsDatabase();
+      const mission = database.selectById(params.data);
+
+      return reply.code(200).send({
+        data: mission || []
+      });
+    } catch (error) {
+      request.log.error(error);
+
+      return reply.code(500).send({
+        error: "An unexpected error occurred when find the missions"
       });
     }
   }
