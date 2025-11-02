@@ -50,7 +50,6 @@ manager-missions/
 | `GET` | `/missions/:id` | Get mission by ID | - |
 | `PUT` | `/missions/:id` | Update mission by ID | Partial mission object |
 | `DELETE` | `/missions/:id` | Delete mission by ID | - |
-| `GET` | `/health` | Health check endpoint | - |
 
 ### Mission Object Schema
 
